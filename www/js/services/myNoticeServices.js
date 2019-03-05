@@ -1002,7 +1002,8 @@ angular
                                 i +
                                 '" class="btn-play" >播放</button><audio data-fileId = ' +
                                 file_id +
-                                "></audio></li>"
+                                "></audio></li>" +
+                                '<div class="attachs_line"></div>'
                         );
                         var liIndex = i + 1;
                         var eleAudio = $(
@@ -1017,7 +1018,6 @@ angular
                             "?MX-Authorization=" +
                             token;
                     } else {
-                        // alert('没有进入file_content_type[i] 判断')
                         if (disk_urls[i]) {
                             // alert('已经进入disk_urls[i] 判断')
                             var disk_url = disk_urls[i];
@@ -1047,103 +1047,69 @@ angular
                                     i +
                                     '" class="btn-download" url=' +
                                     disk_url +
-                                    ">下载</button></li>"
+                                    ">下载</button></li>"+
+                                    '<div class="attachs_line"></div>'
                             );
                         } else {
                             // alert('没有进入disk_urls[i]  判断')
                             // alert('thumbnailUrl=>' + thumbnailUrl);
                             // alert('SERVER.host=>' + SERVER.host)
-                            if (content_type == "image") {
-                                $("#detail-attachments").append(
-                                    '<li><img data-index="' +
-                                        i +
-                                        '" src=' +
-                                        SERVER.url +
-                                        "/attachment/" +
-                                        id +
-                                        "/thumbnail/" +
-                                        file_id +
-                                        "?MX-Authorization=" +
-                                        token +
-                                        ' class="attachment-img"' +
-                                        "url=" +
-                                        SERVER.url +
-                                        "/attachment/" +
-                                        id +
-                                        "/origin/" +
-                                        file_id +
-                                        "?MX-Authorization=" +
-                                        token +
-                                        " type=" +
-                                        content_type +
-                                        '><span class="file_name"  title="' +
-                                        file_name +
-                                        '" ng-show="showDetailAttachment">' +
-                                        file_name +
-                                        '</span><span class="file_size" ng-show="showDetailAttachment">' +
-                                        file_size +
-                                        '</span><button data-index="' +
-                                        i +
-                                        '" class="btn-download" url=' +
-                                        SERVER.url +
-                                        "/attachment/" +
-                                        id +
-                                        "/origin/" +
-                                        file_id +
-                                        "?MX-Authorization=" +
-                                        token +
-                                        ">下载</button></li>" +
-                                        '<div class="attachs_line"></div>'
-                                );
-                            } else {
-                                $("#detail-attachments").append(
-                                    '<li><img data-index="' +
-                                        i +
-                                        '" src=' +
-                                        SERVER.host +
-                                        thumbnailUrl +
-                                        ' class="attachment-img"' +
-                                        "url=" +
-                                        SERVER.url +
-                                        "/attachment/" +
-                                        id +
-                                        "/origin/" +
-                                        file_id +
-                                        "?MX-Authorization=" +
-                                        token +
-                                        " type=" +
-                                        content_type +
-                                        '><span class="file_name"  title="' +
-                                        file_name +
-                                        '" ng-show="showDetailAttachment">' +
-                                        file_name +
-                                        '</span><span class="file_size" ng-show="showDetailAttachment">' +
-                                        file_size +
-                                        '</span><button data-index="' +
-                                        i +
-                                        '" class="btn-download" url=' +
-                                        SERVER.url +
-                                        "/attachment/" +
-                                        id +
-                                        "/origin/" +
-                                        file_id +
-                                        "?MX-Authorization=" +
-                                        token +
-                                        ">下载</button></li>" +
-                                        '<div class="attachs_line"></div>'
-                                );
-                            }
-                        }
-                        if (content_type == "image") {
-                            attachmentUrls.push(
-                                SERVER.url +
+                            $("#detail-attachments").append(
+                                '<li><img data-index="' +
+                                    i +
+                                    '" src=' +
+                                    SERVER.url +
+                                    "/attachment/" +
+                                    id +
+                                    "/thumbnail/" +
+                                    file_id +
+                                    "?MX-Authorization=" +
+                                    token +
+                                    ' class="attachment-img"' +
+                                    "url=" +
+                                    SERVER.url +
                                     "/attachment/" +
                                     id +
                                     "/origin/" +
                                     file_id +
                                     "?MX-Authorization=" +
-                                    token
+                                    token +
+                                    " type=" +
+                                    content_type +
+                                    '><span class="file_name"  title="' +
+                                    file_name +
+                                    '" ng-show="showDetailAttachment">' +
+                                    file_name +
+                                    '</span><span class="file_size" ng-show="showDetailAttachment">' +
+                                    file_size +
+                                    '</span><button data-index="' +
+                                    i +
+                                    '" class="btn-download" url=' +
+                                    SERVER.url +
+                                    "/attachment/" +
+                                    id +
+                                    "/origin/" +
+                                    file_id +
+                                    "?MX-Authorization=" +
+                                    token +
+                                    ">下载</button></li>"+
+                                    '<div class="attachs_line"></div>'
                             );
+                        }
+                        if (content_type == "image") {
+                            if (disk_urls[i]) {
+                                attachmentUrls.push(SERVER.host + disk_urls[i]);
+                            } else {
+                                attachmentUrls.push(
+                                    SERVER.url +
+                                        "/attachment/" +
+                                        id +
+                                        "/origin/" +
+                                        file_id +
+                                        "?MX-Authorization=" +
+                                        token
+                                );
+                            }
                         }
                     }
                 }
@@ -1413,9 +1379,7 @@ angular
         function showDeleteConfirm(id) {
             var confirmPopup = $ionicPopup.confirm({
                 title: "删除",
-                template: "确定要删除该条通知么?",
-                cancelText: '取消',
-                okText: '确定'
+                template: "确定要删除该条通知吗?"
             });
 
             confirmPopup.then(function(res) {
@@ -1473,8 +1437,7 @@ angular
                 },
                 destructiveButtonClicked: function() {
                     hideSheet();
-                },
-                cssClass: 'ionic-operation'
+                }
             });
         }
     });

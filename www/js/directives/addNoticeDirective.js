@@ -45,7 +45,7 @@ angular.module('starter')
                         //if (!(navigator.userAgent.match(/(phone|pad|pod|iPhone|iPod|ios|iPad|Android|Mobile|BlackBerry|IEMobile|MQQBrowser|JUC|Fennec|wOSBrowser|BrowserNG|WebOS|Symbian|Windows Phone)/i))) {
                         var localIds = [];
                         for (var i = 0; i < scope.picItems.length; i++) {
-                            if (scope.picItems[i].url) {
+                            if (scope.picItems[i].url || scope.picItems[i].fid) {
                                 if (!(navigator.userAgent.match(/(phone|pad|pod|iPhone|iPod|ios|iPad|Android|Mobile|BlackBerry|IEMobile|MQQBrowser|JUC|Fennec|wOSBrowser|BrowserNG|WebOS|Symbian|Windows Phone)/i)) || (navigator.userAgent.indexOf('PC Client') > -1)) {
                                     localIds.push(scope.picItems[i].timestamp)
                                 }else {
@@ -58,68 +58,6 @@ angular.module('starter')
                         scope.picItems = localIds;
 
                         function upload() {
-                            if (!(navigator.userAgent.match(/(phone|pad|pod|iPhone|iPod|ios|iPad|Android|Mobile|BlackBerry|IEMobile|MQQBrowser|JUC|Fennec|wOSBrowser|BrowserNG|WebOS|Symbian|Windows Phone)/i))) {
-                                //显示加载状态
-                                $ionicLoading.show({
-                                    content: 'Loading',
-                                    animation: 'fade-in',
-                                    showBackdrop: true,
-                                    maxWidth: 200,
-                                    showDelay: 0
-                                });
-                            }
-                            MXCommon.uploadFile(scope.picItems, true, completeUploadCallback, errorUploadCallBack);
-                        }
-                        upload();
-                    }
-
-                    function completeUploadCallback(result) {
-                        var attachs = [];
-                        var file_id;
-                        var name;
-                        var size;
-                        var content_type;
-                        var fingerprint;
-                        var file_pointer;
-                        var upload_type;
-                        for (var i = 0; i < JSON.parse(result).length; i++) {
-                            file_id = JSON.parse(result)[i].serverId;
-                            name = JSON.parse(result)[i].name;
-                            size = JSON.parse(result)[i].size;
-                            content_type = JSON.parse(result)[i].contentType;
-                            fingerprint = JSON.parse(result)[i].fingerprint;
-                            file_pointer = JSON.parse(result)[i].file_pointer;
-                            upload_type = JSON.parse(result)[i].upload_type;
-                            if (upload_type) {
-                                var attach = {
-                                    file_id: file_id,
-                                    name: name,
-                                    size: size,
-                                    content_type: content_type,
-                                    finger_print: fingerprint,
-                                    file_pointer: file_pointer,
-                                    upload_type: upload_type
-                                }
-                                if(JSON.parse(result)[i].source) {
-                                    attach.source = JSON.parse(result)[i].source;
-                                }
-                            } else {
-                                var attach = {
-                                    file_id: file_id,
-                                    name: name,
-                                    size: size,
-                                    content_type: content_type,
-                                    finger_print: fingerprint,
-                                    file_pointer: file_pointer
-                                }
-                                if(JSON.parse(result)[i].source) {
-                                    attach.source = JSON.parse(result)[i].source;
-                                }
-                            }
-                            //生成发送通知的附件所需格式数组，并将它广播出去
-                            attachs.push(attach);
-                            $rootScope.$broadcast('attachs', attachs);
-                            isSending = true;
                             //显示加载状态
                             $ionicLoading.show({
                                 content: 'Loading',
@@ -128,7 +66,40 @@ angular.module('starter')
                                 maxWidth: 200,
                                 showDelay: 0
                             });
+                            if (!(navigator.userAgent.match(/(phone|pad|pod|iPhone|iPod|ios|iPad|Android|Mobile|BlackBerry|IEMobile|MQQBrowser|JUC|Fennec|wOSBrowser|BrowserNG|WebOS|Symbian|Windows Phone)/i))) {
+                                console.log('loading进入判断条件了')
+                            }
+                            MXCommon.uploadFile(scope.picItems, true, completeUploadCallback, errorUploadCallBack);
                         }
+                        upload();
+                    }
+
+                    function completeUploadCallback(result) {
+                        var attachs = JSON.parse(result).map(function(item) {
+                            var ret = {
+                                file_id: item.serverId,
+                                name: item.name,
+                                size: item.size,
+                                content_type: item.contentType,
+                                finger_print: item.fingerprint,
+                                file_pointer: item.file_pointer
+                            }
+                            if (item.source) {
+                                ret.source = item.downloadUrl ? 2 : item.source
+                            }
+                            if (item.upload_type) {
+                                ret.upload_type = item.upload_type
+                            }
+                            if (item.downloadUrl) {
+                                ret.disk_url = item.downloadUrl;
+                                ret.source = 2;
+                                ret.file_id = -1;
+                            }
+                            return ret;
+                        })
+                        $rootScope.$broadcast('attachs', attachs);
+                        isSending = true;
+
                         //将通过通讯录选人获取到的数据存到data中
                         SendNotice.save().then(function(data) {
                             console.log('data:::', data)
@@ -195,18 +166,16 @@ angular.module('starter')
                                     type: 'error'
                                 });
                             } else {
-                                alert('上传失败')
+                                SildeMessageBinder.tip({
+                                    msg: '上传失败',
+                                    type: 'error'
+                                });
                             }
                         } else {
-                            //alert(JSON.stringify(result));
-                            function alertDismissed() {
-                                //alert('You selected button');
-                            }
-                            navigator.notification.alert('上传失败', // message
-                                alertDismissed, // callback
-                                '提示', // title
-                                '确定' // buttonName
-                            );
+                            SildeMessageBinder.tip({
+                                msg: '上传失败',
+                                type: 'error'
+                            });
                         }
                         //alert("上传失败!");
                     }
@@ -332,12 +301,22 @@ angular.module('starter')
         }
     }
 })
+.directive('inputChange', function() {
+    return {
+        scope: true,
+        link: function(scope, ele, attrs) {
+            ele.on('input', function(e) {
+                scope.$eval(attrs.inputChange, {$event: e.target.value})
+            })
+        }
+    }
+})
 //新建通知列表
 .directive('noticeForm', function(RootscopeApply, SendNotice, $injector, $state, $ionicModal, $rootScope, $stateParams, SelectUsers, GetCurrentUser, AddSelectUsers, AddPictures, SildeMessageBinder, GetLoginName, $ionicGesture) {
     return {
         restrict: 'A',
-        controller: ['$scope', '$ionicModal',
-            function($scope, $ionicModal, $ionicGesture) {
+        controller: ['$scope', '$ionicModal', '$ionicGesture', '$timeout',
+            function($scope, $ionicModal, $ionicGesture, $timeout) {
                 //绑定服务
                 $injector.invoke(SendNotice.bind, this, {
                     $scope: $scope
@@ -447,41 +426,53 @@ angular.module('starter')
                     $scope.titleMaxNum = titleMaxNum;
                     var contentMaxNum = data.contentMaxNum;
                     $scope.contentMaxNum = contentMaxNum;
-                    $scope.$watch('title', function(title) {
-                        if(title){
-                            if(title.length > Number(titleMaxNum)){
-                                $scope.title = $scope.title.substring(0, Number(titleMaxNum));
-                                SildeMessageBinder.tip({
-                                  msg: '输入内容达到最大字数限制，请使用附件形式发送',
-                                  type: 'error'
-                                });
+                    $scope.titleNum = Number(titleMaxNum)
+                    $scope.titleInputChange = function(title) {
+                        console.log('$scope.title =>', title.length);
+                        $timeout(function() {
+                            if(title){
+                                if(title.length > Number(titleMaxNum)){
+                                    $scope.title = $scope.title.substring(0, Number(titleMaxNum));
+                                    SildeMessageBinder.tip({
+                                      msg: '输入内容达到最大字数限制，请使用附件形式发送',
+                                      type: 'error'
+                                    });
+                                }else {
+                                    $scope.title = title;
+                                }
+                                $scope.titleNum = Number(titleMaxNum) - title.length;
+                            }else{
+                                $scope.titleNum = Number(titleMaxNum)
                             }
-                            $scope.titleNum = Number(titleMaxNum) - title.length;
-                        }else{
-                            $scope.titleNum = Number(titleMaxNum)
-                        }
-                        if($scope.titleNum < 0){
-                            //$scope.title = $scope.title.substring(0, Number(titleMaxNum));
-                            $scope.titleNum = 0;
-                        }
-                    });
-                    $scope.$watch('content', function(content) {
-                        if(content){
-                            if(content.length > Number(contentMaxNum)){
-                                SildeMessageBinder.tip({
-                                  msg: '输入内容达到最大字数限制，请使用附件形式发送',
-                                  type: 'error'
-                                });
+                            if($scope.titleNum < 0){
+                                //$scope.title = $scope.title.substring(0, Number(titleMaxNum));
+                                $scope.titleNum = 0;
                             }
-                            $scope.contentNum = Number(contentMaxNum) - content.length;
-                        }else{
-                            $scope.contentNum = Number(contentMaxNum)
-                        }
-                        if($scope.contentNum < 0){
-                            $scope.content = $scope.content.substring(0, Number(contentMaxNum));
-                            $scope.contentNum = 0;
-                        }
-                    });
+                        })
+                    }
+
+                    $scope.contentNum = Number(contentMaxNum)
+                    $scope.contentInputChange = function(content) {
+                        $timeout(function() {
+                            if(content){
+                                if(content.length > Number(contentMaxNum)){
+                                    SildeMessageBinder.tip({
+                                      msg: '输入内容达到最大字数限制，请使用附件形式发送',
+                                      type: 'error'
+                                    });
+                                }
+                                $scope.contentNum = Number(contentMaxNum) - content.length;
+                            }else{
+                                $scope.contentNum = Number(contentMaxNum)
+                            }
+                            if($scope.contentNum < 0){
+                                $scope.content = $scope.content.substring(0, Number(contentMaxNum));
+                                $scope.contentNum = 0;
+                            } else {
+                                $scope.content = content;
+                            }
+                        })
+                    }
                 });
             }
         ], //链接函数
@@ -528,8 +519,10 @@ angular.module('starter')
                 var dataroot = "config.json";
                 $.getJSON(dataroot, function(data) {
                     var pictureNum = data.pictureNum;
+                    var picItemsLength = scope.picItems ? scope.picItems.length : 0;
                     //调用相机或相册或其他文件方法
-                    MXCommon.chooseFile(pictureNum, ['album', 'camera', 'file', 'cloudDrive'], completeCallback, errorCallBack);
+                    MXCommon.chooseFile(pictureNum - picItemsLength, ['album', 'camera', 'file', 'cloudDrive'], completeCallback, errorCallBack);
+                    // MXCommon.chooseFile(pictureNum, ['album', 'camera', 'file'], completeCallback, errorCallBack);
 
                     function completeCallback(result) {
                         var pictures = [];
@@ -572,17 +565,10 @@ angular.module('starter')
                     }
 
                     function errorCallBack(result) {
-                        if (!(navigator.userAgent.match(/(phone|pad|pod|iPhone|iPod|ios|iPad|Android|Mobile|BlackBerry|IEMobile|MQQBrowser|JUC|Fennec|wOSBrowser|BrowserNG|WebOS|Symbian|Windows Phone)/i))) {
-                            alert(result)
-                        } else {
-                            function alertDismissed() {}
-                            navigator.notification.alert(result, // message
-                                alertDismissed, // callback
-                                '提示', // title
-                                '确定' // buttonName
-                        );
-                    }
-                    
+                        SildeMessageBinder.tip({
+                            msg: result,
+                            type: 'error'
+                        });
                 }
             });
         })
@@ -610,9 +596,9 @@ angular.module('starter')
                         }
                         if (!(navigator.userAgent.match(/(phone|pad|pod|iPhone|iPod|ios|iPad|Android|Mobile|BlackBerry|IEMobile|MQQBrowser|JUC|Fennec|wOSBrowser|BrowserNG|WebOS|Symbian|Windows Phone)/i)) || navigator.userAgent.indexOf('PC Client') > -1) {
                             if (result.length < pictureNum) {
-                                alert('已选择 ' + result.length + ' 张图片或文件');
+                                // alert('已选择 ' + result.length + ' 张图片或文件');
                             } else {
-                                alert('已选择 ' + pictureNum + ' 张图片或文件');
+                                // alert('已选择 ' + pictureNum + ' 张图片或文件');
                             }
                             $('.img-wrap').show();
                             RootscopeApply(scope, function() {
@@ -636,14 +622,21 @@ angular.module('starter')
 
                     function errorCallBack(result) {
                         if (!(navigator.userAgent.match(/(phone|pad|pod|iPhone|iPod|ios|iPad|Android|Mobile|BlackBerry|IEMobile|MQQBrowser|JUC|Fennec|wOSBrowser|BrowserNG|WebOS|Symbian|Windows Phone)/i))) {
-                            alert(result)
+                            SildeMessageBinder.tip({
+                                msg: result,
+                                type: 'error'
+                            });
                         } else {
-                            function alertDismissed() {}
-                            navigator.notification.alert(result, // message
-                                alertDismissed, // callback
-                                '提示', // title
-                                '确定' // buttonName
-                            );
+                            SildeMessageBinder.tip({
+                                msg: result,
+                                type: 'error'
+                            });
+                            // function alertDismissed() {}
+                            // navigator.notification.alert(result, // message
+                            //     alertDismissed, // callback
+                            //     '提示', // title
+                            //     '确定' // buttonName
+                            // );
                         }
                     }
                 });
@@ -729,16 +722,23 @@ angular.module('starter')
 
                 function errorCallBack(result) {
                     if (!(navigator.userAgent.match(/(phone|pad|pod|iPhone|iPod|ios|iPad|Android|Mobile|BlackBerry|IEMobile|MQQBrowser|JUC|Fennec|wOSBrowser|BrowserNG|WebOS|Symbian|Windows Phone)/i))) {
-                        alert(result)
+                        SildeMessageBinder.tip({
+                            msg: result,
+                            type: 'error'
+                        });
                     } else {
-                        function alertDismissed() {
-                            //alert('You selected button');
-                        }
-                        navigator.notification.alert(result, // message
-                            alertDismissed, // callback
-                            '提示', // title
-                            '确定' // buttonName
-                        );
+                        // function alertDismissed() {
+                        //     //alert('You selected button');
+                        // }
+                        // navigator.notification.alert(result, // message
+                        //     alertDismissed, // callback
+                        //     '提示', // title
+                        //     '确定' // buttonName
+                        // );
+                        SildeMessageBinder.tip({
+                            msg: result,
+                            type: 'error'
+                        });
                     }
                 }
             },btnStartRecord);
@@ -819,6 +819,7 @@ angular.module('starter')
                 $('#selectUser-wrap').css('background', 'none')
             }
             $('.bt-add img').css('margin-left', '4px');
+            // $('.bt-add img').css('margin-top','14px');
             $('.bt-del img').css('margin-left', '8px');
             //数组去重方法
             var delRepeat = function(array) {
@@ -953,16 +954,17 @@ angular.module('starter')
             //alert('scope.browseImages ************' + scope.browseImages )
             scope.showVoice = false;
             scope.showAttachment = false;
-            if (!scope.picItem.url) {
+            if (!scope.picItem.url && !scope.picItem.fid) {
                 scope.showVoice = true;
             } else {
                 var contentType = scope.picItem.contentType;
                 if (!(navigator.userAgent.match(/(phone|pad|pod|iPhone|iPod|ios|iPad|Android|Mobile|BlackBerry|IEMobile|MQQBrowser|JUC|Fennec|wOSBrowser|BrowserNG|WebOS|Symbian|Windows Phone)/i)) || (navigator.userAgent.indexOf('PC Client') > -1)) {
-                    if(contentType == 'file'){
+                    if(contentType !== 'image' || (scope.picItem.fid && contentType == 'image')){
                         scope.pc_url = scope.picItem.thumbnailUrl;
                         console.log('scope.pc_url:::::', scope.pc_url)
                     }
                 }
+                // alert('contentType ==>>' + scope.picItem.contentType)
                 scope.showAttachment = true;
             }
             scope.originalTime = angular.copy(scope.picItem.timeIndex);

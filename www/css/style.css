@@ -79,7 +79,7 @@
 .myNotice-headPic{
   /* display: block;
   float: left; */
-  width: 52px;
+  width: 46px;
   height: 46px;
   margin: 21px 0px 17px 15px;
 
@@ -612,6 +612,8 @@ a.send:hover {
     padding: 0 5px 0 5px;
 
     background-color: #fff;
+
+    margin-top: 10px;
 }
 #detail-attachments li{
     position: relative;

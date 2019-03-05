@@ -220,29 +220,29 @@ angular.module('starter')
 				{
 					scope.markreadItem.abstract = scope.markreadItem.content;
 				}
-			scope.detailNotice = function (id) {
-			};
-			//选项卡切换效果
-			ele.bind('click', function (e) {
-				RootscopeApply(scope, function () {
+				scope.detailNotice = function(id) {
+				};
+				//选项卡切换效果
+				ele.bind('click', function(e) {
+				RootscopeApply(scope, function() {
 					//初始化信息
 					//DetailsNotice.initDetails(scope.markreadItem.id);
 					//获取点击某条已读信息的信息
-					scope.markreads.some(function (ele, i) {
+					scope.markreads.some(function(ele, i) {
 						if (ele.id === scope.markreadItem.id) {
 							markreadItem = ele;
 							return true;
 						}
 					});
-					if (MXCommon.slideWindow) {
+					if(MXCommon.slideWindow){
 						//$state.go('noticeDetails', {id:scope.markreadItem.id});
-						MXCommon.slideWindow.show({ 'id': 'details', 'url': 'noticeView?id=' + scope.markreadItem.id + '&type=1&panelType= ' + $rootScope.panelType, 'isShowTitle': false });
-					} else {
+						MXCommon.slideWindow.show({'id':'details', 'url': 'noticeView?id='+ scope.markreadItem.id + '&type=1&panelType= ' + $rootScope.panelType, 'isShowTitle': false});
+					}else{
 						//跳转到详情页面
-						$state.go('noticeDetails', { id: scope.markreadItem.id, panelType: $rootScope.panelType });
+						$state.go('noticeDetails', {id:scope.markreadItem.id, panelType: $rootScope.panelType});
 					}
 					var data = scope.markreadItem;
-					$rootScope.$broadcast('data', data);
+					$rootScope.$broadcast('data',data);
 					scope.title = scope.markreadItem.title;
 					scope.content = scope.markreadItem.content;
 					//alert(scope.title);
@@ -251,240 +251,240 @@ angular.module('starter')
 		}
 	}
 })
-	//获取通知未读选项卡按钮
-	.directive('unreadTab', function ($injector, $ionicLoading, StateUnread, StateMydraft, StateMarkread, RootscopeApply) {
-		return {
-			restrict: 'A',
-			controller: ['$scope',
-				function ($scope) { }
-			],
-			link: function postLink(scope, ele, attrs) {
-				//选项卡切换效果
-				ele.bind('click', function (e) {
-					e.preventDefault();
-					//StateMydraft.clear();
-					//StateMarkread.clear();
-					//显示加载状态
-					$ionicLoading.show({
-						content: 'Loading',
-						animation: 'fade-in',
-						showBackdrop: true,
-						maxWidth: 200,
-						showDelay: 0
+//获取通知未读选项卡按钮
+.directive('unreadTab', function($injector, $ionicLoading, StateUnread, StateMydraft, StateMarkread, RootscopeApply) {
+	return {
+		restrict: 'A',
+		controller: ['$scope',
+			function($scope) {}
+		],
+		link: function postLink(scope, ele, attrs) {
+			//选项卡切换效果
+			ele.bind('click', function(e) {
+				e.preventDefault();
+				//StateMydraft.clear();
+				//StateMarkread.clear();
+				//显示加载状态
+				$ionicLoading.show({
+			    content: 'Loading',
+			    animation: 'fade-in',
+			    showBackdrop: true,
+			    maxWidth: 200,
+			    showDelay: 0
+		 		});
+				//调用init方法
+				StateUnread.init();
+				//getSSOToken('notification'); return false;
+			});
+		}
+	}
+})
+//获取通知我发送的选项卡按钮
+.directive('mydraftTab', function($injector, $ionicLoading, StateUnread, StateMydraft, StateMarkread) {
+	return {
+		restrict: 'A',
+		controller: ['$scope',
+			function($scope) {
+			}
+		],
+		link: function postLink(scope, ele, attrs) {
+			//选项卡切换效果
+			ele.bind('click', function(e) {
+				e.preventDefault();
+				//StateUnread.clear();
+				//StateMydraft.clear();
+				//显示加载状态
+				$ionicLoading.show({
+			    content: 'Loading',
+			    animation: 'fade-in',
+			    showBackdrop: true,
+			    maxWidth: 200,
+			    showDelay: 0
+		 		});
+				StateMydraft.init();
+			});
+		}
+	}
+})
+//获取通知已读的选项卡按钮
+.directive('markreadTab', function($injector, $ionicLoading, StateUnread, StateMarkread, StateMydraft, RootscopeApply) {
+	return {
+		restrict: 'A',
+		controller: ['$scope',
+			function($scope) {}
+		],
+		link: function postLink(scope, ele, attrs) {
+			//选项卡切换效果
+			ele.bind('click', function(e) {
+				e.preventDefault();
+				//StateMydraft.clear();
+				//StateUnread.clear();
+				//显示加载状态
+				$ionicLoading.show({
+			    content: 'Loading',
+			    animation: 'fade-in',
+			    showBackdrop: true,
+			    maxWidth: 200,
+			    showDelay: 0
+		 		});
+				StateMarkread.init();
+			});
+		}
+	}
+})
+//获取通知未读列表父级
+.directive('unreadNotice', function($injector, $ionicLoading, StateUnread, StateMydraft, SendNotice, DeleteNotice, DetailsNotice, SildeMessageBinder) {
+	return {
+		restrict: 'A',
+		scope: true,
+		controller: ['$scope', '$state', 'StateUnread', 'SendNotice', 'DeleteNotice', 'RootscopeApply', '$timeout', '$injector',
+			'$ionicGesture', '$ionicNavBarDelegate',
+			function($scope, $state, StateUnread, SendNotice, DeleteNotice, RootscopeApply, $timeout, $injector,
+				$ionicGesture, $ionicNavBarDelegate) {
+				//绑定服务
+				$injector.invoke(StateUnread.bind, this, {
+					$scope: $scope
+				});
+				//处理变量
+				$scope.scopeWorker = function(data) {
+					RootscopeApply($scope, function() {
+						$scope.unreads = data;
 					});
-					//调用init方法
+				};
+				//显示加载状态
+				$ionicLoading.show({
+				    content: 'Loading',
+				    animation: 'fade-in',
+				    showBackdrop: true,
+				    maxWidth: 200,
+				    showDelay: 0
+		 		});
+		 		if(navigator.onLine === false) {
+		          	//提示发送失败
+			        SildeMessageBinder.tip({
+			            msg: '网络连接异常，请检查您的网络',
+			            type: 'error'
+		          	});
+		          	$ionicLoading.hide();
+				}
+				//接收广播
+				$scope.$on('mydraft', function() {
+					console.log('mydraft')
+					//初始化信息
 					StateUnread.init();
-					//getSSOToken('notification'); return false;
 				});
 			}
-		}
-	})
-	//获取通知我发送的选项卡按钮
-	.directive('mydraftTab', function ($injector, $ionicLoading, StateUnread, StateMydraft, StateMarkread) {
-		return {
-			restrict: 'A',
-			controller: ['$scope',
-				function ($scope) {
-				}
-			],
-			link: function postLink(scope, ele, attrs) {
-				//选项卡切换效果
-				ele.bind('click', function (e) {
-					e.preventDefault();
-					//StateUnread.clear();
-					//StateMydraft.clear();
-					//显示加载状态
-					$ionicLoading.show({
-						content: 'Loading',
-						animation: 'fade-in',
-						showBackdrop: true,
-						maxWidth: 200,
-						showDelay: 0
-					});
-					StateMydraft.init();
+		]
+	}
+})
+//获取我发送的通知未读列表父级
+.directive('mydraftNotice', function($injector, StateMydraft, DetailsNotice, SendNotice, DeleteNotice) {
+	return {
+		restrict: 'A',
+		scope: true,
+		controller: ['$scope', '$state', 'StateMydraft', 'SendNotice', 'DetailsNotice', 'DeleteNotice', 'RootscopeApply', '$timeout', '$injector',
+			'$ionicGesture', '$ionicNavBarDelegate',
+			function($scope, $state, StateMydraft, SendNotice, DetailsNotice ,DeleteNotice, RootscopeApply, $timeout, $injector,
+				$ionicGesture, $ionicNavBarDelegate) {
+				//绑定服务
+				$injector.invoke(StateMydraft.bind, this, {
+					$scope: $scope
 				});
-			}
-		}
-	})
-	//获取通知已读的选项卡按钮
-	.directive('markreadTab', function ($injector, $ionicLoading, StateUnread, StateMarkread, StateMydraft, RootscopeApply) {
-		return {
-			restrict: 'A',
-			controller: ['$scope',
-				function ($scope) { }
-			],
-			link: function postLink(scope, ele, attrs) {
-				//选项卡切换效果
-				ele.bind('click', function (e) {
-					e.preventDefault();
-					//StateMydraft.clear();
-					//StateUnread.clear();
-					//显示加载状态
-					$ionicLoading.show({
-						content: 'Loading',
-						animation: 'fade-in',
-						showBackdrop: true,
-						maxWidth: 200,
-						showDelay: 0
-					});
-					StateMarkread.init();
-				});
-			}
-		}
-	})
-	//获取通知未读列表父级
-	.directive('unreadNotice', function ($injector, $ionicLoading, StateUnread, StateMydraft, SendNotice, DeleteNotice, DetailsNotice, SildeMessageBinder) {
-		return {
-			restrict: 'A',
-			scope: true,
-			controller: ['$scope', '$state', 'StateUnread', 'SendNotice', 'DeleteNotice', 'RootscopeApply', '$timeout', '$injector',
-				'$ionicGesture', '$ionicNavBarDelegate',
-				function ($scope, $state, StateUnread, SendNotice, DeleteNotice, RootscopeApply, $timeout, $injector,
-					$ionicGesture, $ionicNavBarDelegate) {
-					//绑定服务
-					$injector.invoke(StateUnread.bind, this, {
-						$scope: $scope
-					});
-					//处理变量
-					$scope.scopeWorker = function (data) {
-						RootscopeApply($scope, function () {
-							$scope.unreads = data;
-						});
-					};
-					//显示加载状态
-					$ionicLoading.show({
-						content: 'Loading',
-						animation: 'fade-in',
-						showBackdrop: true,
-						maxWidth: 200,
-						showDelay: 0
-					});
-					if (navigator.onLine === false) {
-						//提示发送失败
-						SildeMessageBinder.tip({
-							msg: '网络连接异常，请检查您的网络',
-							type: 'error'
-						});
-						$ionicLoading.hide();
-					}
-					//接收广播
-					$scope.$on('mydraft', function () {
-						console.log('mydraft')
-						//初始化信息
-						StateUnread.init();
-					});
-				}
-			]
-		}
-	})
-	//获取我发送的通知未读列表父级
-	.directive('mydraftNotice', function ($injector, StateMydraft, DetailsNotice, SendNotice, DeleteNotice) {
-		return {
-			restrict: 'A',
-			scope: true,
-			controller: ['$scope', '$state', 'StateMydraft', 'SendNotice', 'DetailsNotice', 'DeleteNotice', 'RootscopeApply', '$timeout', '$injector',
-				'$ionicGesture', '$ionicNavBarDelegate',
-				function ($scope, $state, StateMydraft, SendNotice, DetailsNotice, DeleteNotice, RootscopeApply, $timeout, $injector,
-					$ionicGesture, $ionicNavBarDelegate) {
-					//绑定服务
-					$injector.invoke(StateMydraft.bind, this, {
-						$scope: $scope
-					});
 
-					//处理变量
-					$scope.scopeWorker = function (data) {
-						RootscopeApply($scope, function () {
-							$scope.mydrafts = data;
-							//alert($scope.mydrafts);
-						});
-					};
-					//新增我发送的信息
-					$scope.addMydraftNotice = function (data) {
-						RootscopeApply($scope, function () {
-							//将我发送的列表数据默认显示在顶部第一条
-							$scope.mydrafts.unshift(data);
-						});
-					};
-					//删除我发送的信息
-					$scope.delMydraftNotice = function (id) {
-						RootscopeApply($scope, function () {
-							$scope.mydrafts.splice(scope.$index, 1);
-						});
-					};
-					//初始化信息
-					//StateMydraft.init();
-				}
-			]
-		}
-	})
-	//获取通知已读列表父级
-	.directive('markreadNotice', function ($injector, $ionicLoading, $rootScope, StateMarkread, StateMydraft, SendNotice, DetailsNotice) {
-		return {
-			restrict: 'A',
-			scope: true,
-			controller: ['$scope', '$state', 'StateMarkread', 'SendNotice', 'RootscopeApply', '$timeout', '$injector',
-				'$ionicGesture', '$ionicNavBarDelegate', 'DetailsNotice',
-				function ($scope, $state, StateMarkread, SendNotice, RootscopeApply, $timeout, $injector,
-					$ionicGesture, $ionicNavBarDelegate, DetailsNotice) {
-					//绑定服务
-					$injector.invoke(StateMarkread.bind, this, {
-						$scope: $scope
+				//处理变量
+				$scope.scopeWorker = function(data) {
+					RootscopeApply($scope, function() {
+						$scope.mydrafts = data;
+						//alert($scope.mydrafts);
 					});
-					//处理变量
-					$scope.scopeWorker = function (data) {
-						RootscopeApply($scope, function () {
-							$scope.markreads = data;
-							//alert($scope.markreads);
-						});
-					};
-					//StateMarkread.delMarkreadNotice(data);
-					//初始化信息
-					//StateMarkread.init();
-				}
-			]
-		}
-	})
-	//获取通知已读列表父级
-	.directive('btnAdd', function ($injector, $state, StateMarkread, AddSelectUsers, AddPictures) {
-		return {
-			restrict: 'A',
-			controller: ['$scope',
-				function ($scope) { }
-			],
-			link: function postLink(scope, ele, attrs) {
-				//选项卡切换效果
-				ele.bind('click', function (e) {
-					e.preventDefault();
-					//点击添加按钮跳转到新建通知页面
-					$state.go('addNotice');
-					$('#title').val('');
-					$('#textarea').val('');
-					$('.selectUser-item').remove();
-					$('.bt-del').hide();
-					$('.img-wrap .img').remove();
-					// AddSelectUsers.clear();
-					// AddPictures.clear();
-				});
+				};
+				//新增我发送的信息
+				$scope.addMydraftNotice = function(data) {
+					RootscopeApply($scope, function() {
+						//将我发送的列表数据默认显示在顶部第一条
+						$scope.mydrafts.unshift(data);
+					});
+				};
+				//删除我发送的信息
+				$scope.delMydraftNotice = function(id) {
+					RootscopeApply($scope, function() {
+						$scope.mydrafts.splice(scope.$index, 1);
+					});
+				};
+				//初始化信息
+				//StateMydraft.init();
 			}
-		}
-	})
-	//关闭
-	.directive('btnBack', function ($injector, $state, StateMarkread) {
-		return {
-			restrict: 'A',
-			controller: ['$scope',
-				function ($scope) { }
-			],
-			link: function postLink(scope, ele, attrs) {
-				//选项卡切换效果
-				ele.bind('click', function (e) {
-					e.preventDefault();
-					//调用安卓的关闭窗口js
-					MXWebui.closeWindow();
+		]
+	}
+})
+//获取通知已读列表父级
+.directive('markreadNotice', function($injector, $ionicLoading, $rootScope, StateMarkread, StateMydraft, SendNotice, DetailsNotice) {
+	return {
+		restrict: 'A',
+		scope: true,
+		controller: ['$scope', '$state', 'StateMarkread', 'SendNotice', 'RootscopeApply', '$timeout', '$injector',
+			'$ionicGesture', '$ionicNavBarDelegate', 'DetailsNotice',
+			function($scope, $state, StateMarkread, SendNotice, RootscopeApply, $timeout, $injector,
+				$ionicGesture, $ionicNavBarDelegate, DetailsNotice) {
+				//绑定服务
+				$injector.invoke(StateMarkread.bind, this, {
+					$scope: $scope
 				});
-				if (!(navigator.userAgent.match(/(phone|pad|pod|iPhone|iPod|ios|iPad|Android|Mobile|BlackBerry|IEMobile|MQQBrowser|JUC|Fennec|wOSBrowser|BrowserNG|WebOS|Symbian|Windows Phone)/i))) {
-					ele.css('display', 'none')
-				}
+				//处理变量
+				$scope.scopeWorker = function(data) {
+					RootscopeApply($scope, function() {
+						$scope.markreads = data;
+						//alert($scope.markreads);
+					});
+				};
+				//StateMarkread.delMarkreadNotice(data);
+				//初始化信息
+				//StateMarkread.init();
 			}
+		]
+	}
+})
+//获取通知已读列表父级
+.directive('btnAdd', function($injector, $state, StateMarkread, AddSelectUsers, AddPictures) {
+	return {
+		restrict: 'A',
+		controller: ['$scope',
+			function($scope) {}
+		],
+		link: function postLink(scope, ele, attrs) {
+			//选项卡切换效果
+			ele.bind('click', function(e) {
+				e.preventDefault();
+				//点击添加按钮跳转到新建通知页面
+				$state.go('addNotice');
+				$('#title').val('');
+				$('#textarea').val('');
+				$('.selectUser-item').remove();
+				$('.bt-del').hide();
+				$('.img-wrap .img').remove();
+				// AddSelectUsers.clear();
+				// AddPictures.clear();
+			});
 		}
-	})
+	}
+})
+//关闭
+.directive('btnBack', function($injector, $state, StateMarkread) {
+	return {
+		restrict: 'A',
+		controller: ['$scope',
+			function($scope) {}
+		],
+		link: function postLink(scope, ele, attrs) {
+			//选项卡切换效果
+			ele.bind('click', function(e) {
+				e.preventDefault();
+				//调用安卓的关闭窗口js
+				MXWebui.closeWindow();
+			});
+			if (!(navigator.userAgent.match(/(phone|pad|pod|iPhone|iPod|ios|iPad|Android|Mobile|BlackBerry|IEMobile|MQQBrowser|JUC|Fennec|wOSBrowser|BrowserNG|WebOS|Symbian|Windows Phone)/i))) {
+		        ele.css('display', 'none')
+		    }
+		}
+	}
+})
