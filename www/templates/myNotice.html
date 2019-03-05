@@ -1,0 +1,35 @@
+<ion-view title="通知" ng-controller="MyNoticeAllCtrl">
+    <ion-nav-title class="">
+        <ul class="tabs-list" id="nav">
+            <li><a href="#" id="tow1" unread-tab ng-class="{on:panelType === 1}" >未读</a></li>
+            <li><a href="#" class="" id="tow2" mydraft-tab ng-class="{on:panelType === 2}">我发送的</a></li>
+            <li style="border-right:none;"><a href="#" class="" id="tow3" markread-tab ng-class="{on:panelType === 3}">已读</a></li>
+        </ul>
+    </ion-nav-title>
+    <ion-nav-buttons side="left">
+        <a href="#/app/todolist/-3" class="button icon-left ion-ios-arrow-left button-clear button-white" btn-back></a>
+    </ion-nav-buttons>
+    <ion-nav-buttons side="right">
+        <a href="#" class="button button-icon icon ion-ios-plus-empty" btn-add ></a>
+    </ion-nav-buttons>
+    <ion-content class="has-header" style="background-color:#f2f2f2" overflow-scroll="true">
+        <div class="list block ng-hide" id="myNotice-list" ng-cloak unread-notice ng-show="panelType === 1" ng-class="{emptyImg:unreads.length === 0}">
+            <ion-list>
+                <ion-item class="item item-checkbox" ng-click="show()" on-hold="onHold($event)" unread-item ng-repeat="unreadItem in unreads">
+                </ion-item>
+            </ion-list>
+        </div>
+        <div class="list ng-hide" id="myNotice-list" ng-cloak mydraft-notice ng-show="panelType === 2" ng-class="{emptyImg:mydrafts.length === 0}">
+            <ion-list>
+                <ion-item class="item item-checkbox" mydraft-item  on-hold="onHold($event)"  ng-repeat="mydraftItem in mydrafts">
+                </ion-item>
+            </ion-list>
+        </div>
+        <div class="list ng-hide" id="myNotice-list" ng-cloak markread-notice ng-show="panelType === 3" ng-class="{emptyImg:markreads.length === 0}">
+            <ion-list>
+                <ion-item class="item item-checkbox" ng-click="show()" markread-item on-hold="onHold($event)" ng-repeat="markreadItem in markreads">
+                </ion-item>
+            </ion-list>
+        </div>
+    </ion-content>
+</ion-view>

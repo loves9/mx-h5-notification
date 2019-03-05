@@ -1,0 +1,117 @@
+<ion-view title="新建通知">
+    <!-- 弹出层  -->
+    <div class="avoice"></div>
+    <!-- 录音 start-->
+    <div class="aoice">
+        <ul class="aoice_ul">
+            <img class="Voice" src="img/Voice.gif" />
+            <span class="statevoice">开始录音</span>
+            <span type="text" class="showTime"></span>
+        </ul>
+        <div class="vaudio"></div>
+        <span class="span">长按开始录音</span>
+    </div>
+    <!-- end -->
+    <ion-nav-buttons side="left">
+        <a href="#/myNotice" class="bt-cancel" cancel-notice>取消</a>
+    </ion-nav-buttons>
+    <ion-nav-buttons side="right">
+        <a href="#/myNotice" class="bt-finish" add-notice>发送</a>
+    </ion-nav-buttons>
+    <ion-content
+        class="has-header"
+        style="background-color:#f2f2f2"
+        overflow-scroll="true"
+    >
+        <div class="list" notice-form>
+            <div class="addNotice-title">
+                <div class="item item-input">
+                    <input
+                        id="title"
+                        type="text"
+                        placeholder="请输入通知标题"
+                        ng-model="title"
+                        maxLength="{{ titleMaxNum }}"
+                    />
+                    <span class="title-num">{{ titleNum }}</span>
+                    <!-- <b class="title-num">30</b> -->
+                </div>
+            </div>
+            <div class="addNotice-content">
+                <label class="item item-textarea">
+                    <textarea
+                        id="textarea"
+                        placeholder="请输入通知内容..."
+                        ng-model="content"
+                        rows="3"
+                        cols="30"
+                        maxLength="{{ contentMaxNum }}"
+                    ></textarea>
+                </label>
+                <span class="content-num">{{ contentNum }}</span>
+                <!-- <b class="content-num">200</b> -->
+            </div>
+            <!--  <a class="item item-icon-left item-icon-right" href="#">
+            通知结束时间<input class="" readonly="readonly" name="appDateTime" id="appDateTime" type="text"/>
+          <i class="icon ion-ios-arrow-right" style="color:#cbcbcb"></i>
+        </a>-->
+            <!-- <input type="text" class="endTime" ng-model="datepicker" name="datepicker" ng-click="opendateModal()" readonly>
+            <p class="endTime-text">通知结束时间</p>
+          <i class="icon ion-ios-arrow-right" style="font-size: 32px;position: relative;height: 52px;width: 32px;margin-top: -41px;float: right;margin-right: -6px;color: #cbcbcb;z-index:200"></i> -->
+
+            <div>
+                <p class="receiver-title">接收人</p>
+                <div
+                    style="background-color:#fff; width: 100%;"
+                    id="selectUser-wrap"
+                    selectuser-wrap
+                >
+                    <div id="selectUser-list">
+                        <div
+                            class="selectUser-item"
+                            id="selectUser-item"
+                            receiver-item
+                            ng-repeat="receiverItem in receivers"
+                        ></div>
+                        <img src="img/ico_add.png" class="bt-add" id="bt-add" />
+                        <img
+                            src="img/ico_del.png"
+                            class="bt-del ng-hide"
+                            id="bt-del"
+                            ng-cloak
+                            ng-show="receivers.length > 0"
+                        />
+                    </div>
+                </div>
+            </div>
+
+            <div class="img-wrap">
+                <ul class="warpul" ng-repeat="picItem in picItems">
+                    <li pic-item></li>
+                    <div class="attachs_line"></div>
+                </ul>
+            </div>
+            <div style="clear:both"></div>
+        </div>
+    </ion-content>
+    <!-- PC -->
+    <ion-footer-bar align-title="left" id="footer-bar">
+        <a href="#" class="addPicture">
+            <h1 class="addPicture-title-pc">添加附件</h1>
+        </a>
+    </ion-footer-bar>
+    <!-- mobile -->
+    <!--<ion-footer-bar align-title="left" id="footer-bar" class="two">-->
+    <!-- <div class="foot"> -->
+    <!--<a href="#" class="addPicture">
+      <h1 class="addPicture-title"></h1>
+    </a>
+    <a href="#" class="addFile">
+      <h1 class="addfile-title"></h1>
+    </a>
+    <a href="#" class="addvoice"  ng-click="voice()">
+      <h1 class="addvoice-title"></h1>
+    </a>-->
+    <!-- </div> -->
+    <!--</ion-footer-bar>-->
+</ion-view>

@@ -1,0 +1,11 @@
+<div class="modal">
+  <header class="bar bar-header bar-positive" style="z-index:200">
+    <h1 class="title" style="line-height:40px;">请选择通知结束时间</h1>
+  </header>
+  <ion-content has-header="true">
+    <div class="padding" style="margin-top:30px;">
+      <div pickadate ng-model="myDate"></div>
+    </div>
+    <button class="button button-full button-positive" ng-click="closedateModal(myDate)">保存</button>
+  </ion-content>
+</div>

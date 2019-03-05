@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no, width=device-width">
+    <meta name="format-detection" content="telephone=no"/>
+    <title>通知</title>
+    <link href="css/ionic.app.css?v=152" rel="stylesheet">
+    <link href="css/style.css?v=152" rel="stylesheet">
+    <!-- IF using Sass (run gulp sass first), then uncomment below and remove the CSS includes above
+    <link href="css/ionic.app.css" rel="stylesheet">
+    -->
+    <!-- cordova script (this will be a 404 during development) -->
+    <!-- <script src="lib/debuggap.js?192.168.100.89:8100" type="text/javascript"></script>-->
+    <!-- <script src="lib/ngCordova/dist/ng-cordova.js"></script>-->
+    <!-- ionic/angularjs js -->
+    <!--<script src="http://192.168.100.91:8081/target/target-script-min.js#anonymous"></script>-->
+
+    <!--添加显示/隐藏的样式，解决ios闪烁bug-->
+    <style type="text/css">
+      .ng-hide-add
+      .ng-hide-remove {
+        display: none !important;
+      }
+      [ng\:cloak], [ng-cloak], .ng-cloacd ..k {
+        display: none !important;
+      }
+    </style>
+  </head>
+  <body ng-app="starter" animation="slide-left-right-ios7">
+    <ion-nav-view add-notice>
+        <ion-nav-bar ng-cloak class="bar-positive nav-title-slide-ios7" align-title="middle">
+        </ion-nav-bar>
+    </ion-nav-view>
+
+    <div ng-cloak ng-controller="SildeMessageCtrl" ng-show="showSlideMessage" ng-animate="slide-msg" class="message-slide {{msgType}}">
+        <span ng-bind="slideMessageContent"></span>
+    </div>
+
+    <!--<script type="text/javascript" src="cordova.js"></script>-->
+<!--    <script type="text/javascript" src="lib/statusbar/statusbar.js"></script>-->
+    <script src="lib/ionic/js/ionic.bundle.js"></script>
+    <script src="lib/angular/angular.min.js"></script>
+    <script src="lib/angular-translate/angular-translate.min.js"></script>
+    <script src="lib/angular-translate-loader-static-files/angular-translate-loader-static-files.min.js"></script>
+    <script src="lib/underscore/underscore.js"></script>
+    <!--<script src="../plugins/cordova-plugin-statusbar/www/statusbar.js"></script>
+    <script src="../plugins/com.ionic.keyboard/www/keyboard.js"></script>-->
+
+    <script type="text/javascript" src="lib/ionic/js/jquery/dist/jquery.js"></script>
+    <script type="text/javascript" src="lib/polyfill/index.js"></script>
+
+
+    <!-- angular date picker js-->
+    <!--<script src="lib/datePicker/js/angular-pickadate.js"></script>-->
+    <!-- angular date picker css-->
+    <!--<link href="lib/datePicker/css/angular-pickadate.css" rel="stylesheet">-->
+
+    <!-- your app's js -->
+    <script src="js/app.js?v=152"></script>
+    <script src="js/controllers/app.js?v=152"></script>
+    <script src="js/controllers/addNoticeController.js?v=152"></script>
+    <script src="js/controllers/myNoticeController.js?v=152"></script>
+    <script src="js/controllers/noticeDetailsController.js?v=152"></script>
+    <script src="js/controllers/allReadedController.js?v=152"></script>
+    <script src="js/directives/myNoticeDirective.js?v=152"></script>
+    <script src="js/directives/noticeDetailsDirective.js?v=152"></script>
+    <script src="js/directives/addNoticeDirective.js?v=152"></script>
+    <script src="js/directives/allReadedDirective.js?v=152"></script>
+    <script src="js/services/globle.js?v=152"></script>
+    <script src="js/services/myNoticeServices.js?v=152"></script>
+    <script src="js/filters/filters.js?v=152"></script>
+
+    <script src="vendor/underscore/underscore.js?v=152"></script>
+
+    <!-- <script type="text/javascript" src="192.168.40.235:1111/target/target-script-min.js#anonymous"></script> -->
+    <!--解决在ios header中显示bug，增加ios单独的样式-->
+    <script type="text/javascript">
+      (function() {
+            var agent = navigator.userAgent;
+
+            if (!(navigator.userAgent.match(/(phone|pad|pod|iPhone|iPod|ios|iPad|Android|Mobile|BlackBerry|IEMobile|MQQBrowser|JUC|Fennec|wOSBrowser|BrowserNG|WebOS|Symbian|Windows Phone)/i))) {
+              $('body').addClass('pc');
+            }
+      }());
+    </script>
+<!--     <script type="text/javascript" >
+        window.onerror=handleErr;
+        var txt="";
+        function handleErr(msg,url,l){
+          txt="本页中存在错误。\n\n";
+          txt+="错误：" + msg + "\n";
+          txt+="URL: " + url + "\n";
+          txt+="行：" + l + "\n\n";
+          txt+="点击“确定”继续。\n\n";
+          alert(txt);
+          return true;
+        }
+    </script> -->
+  </body>
+</html>

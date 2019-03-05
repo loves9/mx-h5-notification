@@ -1,0 +1,21 @@
+<ion-view title="{{title}}">
+  <ion-nav-bar class="bar-positive">
+    <ion-nav-back-button class="button-icon ion-ios-arrow-left all-go-back">
+    </ion-nav-back-button>
+  </ion-nav-bar>
+  <ion-content class="has-header" overflow-scroll="true" id="overflow-scroll">
+    <div class="read-wrap" id="read-wrap" read-wrap ng-show="allReadlists.length > 0">
+      <ul class="read-list" id="read-list">
+        <li all-readlist-item ng-repeat="allReadlistItem in allReadlists">
+        </li>
+      </ul>
+    </div>
+    <div class="notread-wrap" id="notread-wrap" notread-wrap ng-show="allUnreadlists.length > 0">
+      <ul class="notread-list" id="notread-list" ng-cloak>
+        <li all-unreadlist-item ng-repeat="allUnreadlistItem in allUnreadlists">
+        </li>
+      </ul>
+      <div class="loading-wrap"></div>
+    </div>
+  </ion-content>
+</ion-view>

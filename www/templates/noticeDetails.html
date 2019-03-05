@@ -1,0 +1,138 @@
+<ion-view title="通知">
+    <ion-nav-buttons side="left">
+        <a
+            href="#/app/todolist/-3"
+            class="button icon-left ion-ios-arrow-left button-clear button-white"
+            id="notice-close"
+            btn-close
+        ></a>
+    </ion-nav-buttons>
+    <ion-nav-buttons side="right">
+        <a
+            href="#"
+            class="icon ion-ios-trash-outline ng-hide"
+            btn-del
+            ng-click="show()"
+            ng-cloak
+            ng-show="showNavBtn"
+        ></a>
+        <a
+            href="#"
+            class="button icon-right ion-ios-close-empty"
+            btn-close-pc
+            ng-click="show()"
+            ng-cloak
+        ></a>
+    </ion-nav-buttons>
+    <ion-content class="has-header" overflow-scroll="true">
+        <div class="detail_container_cls" id="taskDetails-list">
+            <div style="background-color:#fff;">
+                <div class="layout_h_cls">
+                    <img
+                        ng-src="{{ avatar_url }}"
+                        ng-cloak
+                        ng-show="loginName.length > 0"
+                        class="myNotice-headPic"
+                    />
+                    <div class="layout_v_cls">
+                        <div class="layout_h_cls">
+                            <span class="detail_name_cls">{{
+                                senderName
+                            }}</span>
+                            <img
+                                id="wrap-chat"
+                                src="img/icon_chat.png"
+                                btn-headpic
+                            />
+                        </div>
+                        <span class="detail_date_cls">{{ createTime }}</span>
+                    </div>
+                </div>
+
+                <div class="wrap-content-main">
+                    <p class="wrap-title">{{ title }}</p>
+                    <span class="wrap-content" ng-bind-html="content"></span>
+                </div>
+
+                <div style="height:1px; width:100%;"></div>
+            </div>
+
+            <ul id="detail-attachments" class="detail-attachments"></ul>
+
+            <div ng-if="readlists.length > 0">
+                <div
+                    class="section_tip_cls ng-hide"
+                    ng-cloak
+                    ng-show="readlists.length > 0"
+                >
+                    已读&nbsp;（{{ readlists.length }}）
+                </div>
+                <div style="background-color:#fff" id="read-wrap" read-wrap>
+                    <ul class="read-list" id="read-list">
+                        <li
+                            readlist-item
+                            ng-repeat="readlistItem in cutReadlists"
+                        ></li>
+                        <li
+                            class="ng-hide"
+                            ng-cloak
+                            ng-show="readlists.length > 15"
+                        >
+                            <a
+                                btn-read-more
+                                class="unreadlists-more"
+                                href="javascript:void(0)"
+                                >更多</a
+                            >
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div>
+                <div
+                    class="section_tip_cls ng-hide"
+                    ng-cloak
+                    ng-show="unreadlists.length > 0"
+                >
+                    未读&nbsp;（{{ unreadlists.length }}）
+                </div>
+                <div
+                    style="background-color:#fff"
+                    id="notread-wrap"
+                    notread-wrap
+                >
+                    <ul
+                        class="notread-list ng-hide"
+                        id="notread-list"
+                        ng-cloak
+                        ng-show="unreadlists.length > 0"
+                    >
+                        <li
+                            unreadlist-item
+                            ng-repeat="unreadlistItem in cutUnreadlists"
+                        ></li>
+                        <li
+                            class="ng-hide"
+                            ng-cloak
+                            ng-show="unreadlists.length > 15"
+                        >
+                            <a
+                                btn-unread-more
+                                class="unreadlists-more"
+                                href="javascript:void(0)"
+                                >更多</a
+                            >
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div
+                class="action ng-hide"
+                ng-cloak
+                ng-show="unreadlists.length > 0"
+            >
+                <a href="#" class="send" btn-send>发送提醒</a>
+            </div>
+        </div>
+    </ion-content>
+</ion-view>
