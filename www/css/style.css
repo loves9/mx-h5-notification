@@ -139,7 +139,7 @@
   width: 100%;
   height: 100%;
   margin-top: -20px;
-  background: url(../img/empty_img.png) center center no-repeat;
+  background: url(../img/nodata.png) center center no-repeat;
   -webkit-transform: scale(0.6);
   moz-transform: scale(0.6);
   -ms-transform: scale(0.6);
@@ -1193,13 +1193,16 @@ textarea{resize:none}
 }
 
 .warpul li .thumbnail, .warpul li .thumbnail-file, .thumbnail-loading{
-  float: left;
-  margin: 9px 0 0 7px;
+  margin-left: 15px;
+
+  width: 48px;
+  height: 48px;
 }
 .thumbnail-pause{
-  float: left;
-  margin: 9px 0 0 7px;
-  display:none;
+  margin-left: 15px;
+
+  width: 48px;
+  height: 48px;
 }
 .warpul li .thumbnail-name{
   display:block;
@@ -1470,4 +1473,15 @@ textarea{resize:none}
   letter-spacing: 0;
 
   margin: 10px 0px 10px 15px;
+}
+
+.nodata_cls {
+  width: 100%;
+  text-align: center;
+  
+  position: relative;
+  top: 370px;
+
+  font-size: 24px;
+  color: #999999;
 }

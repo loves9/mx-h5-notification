@@ -18,18 +18,29 @@
                 <ion-item class="item item-checkbox" ng-click="show()" on-hold="onHold($event)" unread-item ng-repeat="unreadItem in unreads">
                 </ion-item>
             </ion-list>
+            <div ng-show="unreads.length === 0" class="layout_v_cls">
+                <span class="nodata_cls">无未读通知</span>
+            </div>
         </div>
         <div class="list ng-hide" id="myNotice-list" ng-cloak mydraft-notice ng-show="panelType === 2" ng-class="{emptyImg:mydrafts.length === 0}">
             <ion-list>
                 <ion-item class="item item-checkbox" mydraft-item  on-hold="onHold($event)"  ng-repeat="mydraftItem in mydrafts">
                 </ion-item>
             </ion-list>
+
+            <div ng-show="mydrafts.length === 0" class="layout_v_cls">
+                <span class="nodata_cls">无通知</span>
+            </div>
         </div>
         <div class="list ng-hide" id="myNotice-list" ng-cloak markread-notice ng-show="panelType === 3" ng-class="{emptyImg:markreads.length === 0}">
             <ion-list>
                 <ion-item class="item item-checkbox" ng-click="show()" markread-item on-hold="onHold($event)" ng-repeat="markreadItem in markreads">
                 </ion-item>
             </ion-list>
+
+            <div ng-show="markreads.length === 0" class="layout_v_cls">
+                <span class="nodata_cls">无通知</span>
+            </div>
         </div>
     </ion-content>
 </ion-view>

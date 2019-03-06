@@ -925,9 +925,9 @@ angular.module('starter')
         replace: false,
         scope: true,
         template: 
-            '<img class="war-icon" ng-src="{{pc_url || picItem.url}}" type="{{contentType}}" ng-show="showAttachment">\
-            <img class="war-icon" ng-src="img/loading.png" ng-show="showVoice">\
-            <img class="war-icon" ng-src="img/pauseVoice.png" ng-show="showVoice">\
+            '<img class="thumbnail" ng-src="{{pc_url || picItem.url}}" type="{{contentType}}" ng-show="showAttachment">\
+            <img class="thumbnail-loading" ng-src="img/loading.png" ng-show="showVoice">\
+            <img class="thumbnail-pause" ng-src="img/pauseVoice.png" ng-show="showVoice">\
             <div class="thumbnail-wrap" ng-show="showAttachment">\
                 <span class="thumbnail-name" title="{{picItem.name}}">{{picItem.name}}</span>\
                 <span class="thumbnail-size" title="{size}}">{{size}}</span>\
@@ -951,6 +951,7 @@ angular.module('starter')
         ],
         //链接函数
         link: function postLink(scope, ele, attrs) {
+            alert(scope.picItem.url + '---' + scope.pc_url + '---' + scope.picItem.contentType);
             //alert('scope.browseImages ************' + scope.browseImages )
             scope.showVoice = false;
             scope.showAttachment = false;
