@@ -951,7 +951,7 @@ angular.module('starter')
         ],
         //链接函数
         link: function postLink(scope, ele, attrs) {
-            alert(scope.picItem.url + '---' + scope.pc_url + '---' + scope.picItem.contentType);
+            // alert(scope.picItem.url + '---' + scope.pc_url + '---' + scope.picItem.contentType);
             //alert('scope.browseImages ************' + scope.browseImages )
             scope.showVoice = false;
             scope.showAttachment = false;

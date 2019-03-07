@@ -1019,9 +1019,9 @@ angular
                             token;
                     } else {
                         if (disk_urls[i]) {
-                            alert('已经进入disk_urls[i] 判断')
-                            alert('thumbnailUrl=>' + thumbnailUrl);
-                            alert('SERVER.host=>' + SERVER.host);
+                            // alert('已经进入disk_urls[i] 判断')
+                            // alert('thumbnailUrl=>' + thumbnailUrl);
+                            // alert('SERVER.host=>' + SERVER.host);
 
                             var disk_url = disk_urls[i];
                             if (disk_url.indexOf("http") == -1) {
@@ -1053,9 +1053,9 @@ angular
                                     '<div class="attachs_line"></div>'
                             );
                         } else {
-                            alert('没有进入disk_urls[i]  判断')
-                            alert('thumbnailUrl=>' + thumbnailUrl);
-                            alert('SERVER.host=>' + SERVER.host)
+                            // alert('没有进入disk_urls[i]  判断')
+                            // alert('thumbnailUrl=>' + thumbnailUrl);
+                            // alert('SERVER.host=>' + SERVER.host)
                             var imageIconUrl = ''
                             if(SERVER.host && thumbnailUrl){
                                 imageIconUrl = SERVER.host + thumbnailUrl
